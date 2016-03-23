@@ -3,6 +3,10 @@ body {
     margin: 0px;
 }
 
+#alertMessage {
+    display: none;
+}
+
 .circle {
     border-radius: 5000px;
 }

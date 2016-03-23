@@ -124,9 +124,11 @@ var Circle = function(resetButton) {
                 window.trialLogs.push(window.logger);
 
                 if (number_of_iterations_per_trial === window.trialLogs.length) {
-                    displayResults();
+                    displayResults(resetButton);
                 }
 
+                console.clear();
+                console.log("Current Logs:")
                 console.log(window.trialLogs);
 
             });
@@ -236,7 +238,10 @@ var ResetButton = function(projectContainer) {
 
 };
 
-function displayResults() {
+function displayResults(resetButton) {
+
+    resetButton.prop("disabled", true);
+    $("#alertMessage").show();
 
     $("#resultsModal").modal("show");
 
