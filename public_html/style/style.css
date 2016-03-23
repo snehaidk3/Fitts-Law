@@ -1,0 +1,17 @@
+body {
+    overflow: hidden;
+    margin: 0px;
+}
+
+.circle {
+    border-radius: 5000px;
+}
+
+.reset-button {
+    position: absolute;
+    top: calc(50% - 17px);
+    left: calc(50% - 17px);
+    height: 35px;
+    width: 35px;
+    padding: 0px;
+}
