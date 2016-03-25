@@ -7,7 +7,7 @@
  | Here are some configurable variables for this project:
  */
 
-number_of_iterations_per_trial = 5;
+number_of_iterations_per_trial = 12;
 
 possible_circle_radius = [16, 32, 64];
 possible_circle_distance = [128, 512];
