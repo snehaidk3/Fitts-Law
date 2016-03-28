@@ -7,7 +7,7 @@
  | Here are some configurable variables for this project:
  */
 
-number_of_iterations_per_trial = 12;
+number_of_iterations_per_trial = 5;
 
 possible_circle_radius = [16, 32, 64];
 possible_circle_distance = [128, 512];
@@ -20,11 +20,11 @@ possible_circle_distance = [128, 512];
 // STOP - Do not edit below this line unless you know what you are doing.
 // -------------------------------------------------------------------------
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     $("#startUpModal").modal("show");
 
-    $('#agreement').on('click', function () {
+    $('#agreement').on('click', function() {
         if ($(this).prop("checked")) {
             $('#continueBtn').show();
         } else {
@@ -32,8 +32,13 @@ $(document).ready(function () {
         }
     });
 
-
-
+    // For consistency purposes, we will only allow Chrome and Opera users.
+    var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    if (!isChrome) {
+        document.write("You need to be using Google Chrome in order to take part in this experiment.");
+        return;
+    }
+    
     fittsLaw = new FittsLaw();
 
     console.log("************ PROJECT INITIALIZED ************");
@@ -52,11 +57,11 @@ $(document).ready(function () {
  * Fitts Law Starter Class
  *
  */
-var FittsLaw = function () {
+var FittsLaw = function() {
 
     this.numberOfTrials;
 
-    this.start = function () {
+    this.start = function() {
         projectContainer = new ProjectContainer();
         projectContainer.draw();
 
@@ -70,7 +75,7 @@ var FittsLaw = function () {
  * Logger Class
  *
  */
-var Logger = function () {
+var Logger = function() {
 
     var self = this;
 
@@ -84,9 +89,42 @@ var Logger = function () {
     this.circleRadius;
     this.circleDistance;
     this.circlePosition;
+    this.points = [];
 
-    this.calculateTotalTime = function () {
+    this.calculateTotalTime = function() {
         self.totalTime = (self.endTime - self.startTime) / 1000;
+    };
+
+    /**
+     * Calculate the distance traveled using the distance formula.
+     * d(P1 P2) = sqrt((x1 - x2)^2 + (y1 - y2)^2)
+     * 
+     * @returns {void}
+     */
+    this.calculateTotalDistance = function() {
+
+        var d = [];
+        var D = 0;
+
+        for (var i = 0; i < (self.points.length - 1); i++) {
+
+            x1 = self.points[i].X;
+            y1 = self.points[i].Y;
+
+            x2 = self.points[i + 1].X;
+            y2 = self.points[i + 1].Y;
+
+            var distance = Math.sqrt((Math.pow((x1 - x2), 2)) + (Math.pow((y1 - y2), 2)));
+
+            d.push(distance);
+        }
+
+        $.each(d, function() {
+            D += this;
+        });
+
+        self.distanceTraveled = Math.ceil(D);
+
     };
 
 };
@@ -96,7 +134,7 @@ var Logger = function () {
  *
  * This is our blueprint for creating a circle.
  */
-var Circle = function (resetButton) {
+var Circle = function(resetButton) {
 
     // store a pointer to 'this'
     var self = this;
@@ -122,13 +160,14 @@ var Circle = function (resetButton) {
                 height: (actualRadius * 2) + "px"
             })
             .addClass("circle")
-            .on("click", function (event) {
+            .on("click", function(event) {
 
                 resetButton.prop("disabled", false);
                 self.circle.remove();
 
                 window.logger.endTime = Date.now();
                 window.logger.calculateTotalTime();
+                window.logger.calculateTotalDistance();
                 window.logger.active = false;
 
                 window.trialLogs.push(window.logger);
@@ -143,7 +182,7 @@ var Circle = function (resetButton) {
 
             });
 
-    this.get = function () {
+    this.get = function() {
         return this.circle;
     };
 
@@ -166,7 +205,7 @@ var Circle = function (resetButton) {
  *
  *
  */
-var ProjectContainer = function () {
+var ProjectContainer = function() {
 
     // store a pointer to 'this'
     var self = this;
@@ -180,16 +219,25 @@ var ProjectContainer = function () {
                 width: self.width + "px"
             })
             .addClass("project-container")
-            .on("mousemove", function (event) {
+            .on("mousemove", function(event) {
                 try {
                     if (window.logger.active) {
+
+                        var point = {X: event.clientX, Y: event.clientY};
+                        window.logger.points.push(point);
+
                         window.logger.distanceTraveled++;
+
+
+
+
+
                     }
                 } catch (error) {
 
                 }
             })
-            .on("click", function (event) {
+            .on("click", function(event) {
                 try {
                     if (window.logger.active) {
                         var error = {
@@ -204,15 +252,15 @@ var ProjectContainer = function () {
 
             });
 
-    this.draw = function () {
+    this.draw = function() {
         $(document.body).append(this.projectContainer);
     };
 
-    this.add = function (circle) {
+    this.add = function(circle) {
         this.projectContainer.append(circle);
     };
 
-    this.get = function () {
+    this.get = function() {
         return this.projectContainer;
     };
 
@@ -223,14 +271,14 @@ var ProjectContainer = function () {
  * 
  * @param {type} projectContainer
  */
-var ResetButton = function (projectContainer) {
+var ResetButton = function(projectContainer) {
 
     // store a pointer to 'this'
     var self = this;
 
     this.resetButton = $("<button type='button'>Go</button>")
             .addClass("reset-button btn btn-success")
-            .on("click", function () {
+            .on("click", function() {
 
                 window.logger = new Logger();
                 window.logger.active = true;
@@ -242,7 +290,7 @@ var ResetButton = function (projectContainer) {
 
             });
 
-    this.draw = function () {
+    this.draw = function() {
         $(document.body).append(this.resetButton);
     };
 
@@ -257,18 +305,18 @@ function displayResults(resetButton) {
 
     $("#resultsModal").modal("show");
 
-    $("#results").append('<tr><th>Trial Number</th><th>Total Time</th><th>Distance Traveled</th><th>Number of Errors</th><th>Circle Radius</th><th>Circle Distance</th><th>Circle Position</th></tr>');
+    $("#results").append('<thead><th>Trial Number</th><th>Total Time</th><th>Distance Traveled (Approx)</th><th>Number of Errors</th><th>Circle Radius</th><th>Circle Distance</th><th>Circle Position</th></thead>');
 
     for (i = 0; i < window.trialLogs.length; i++) {
-        $("#results").append('<tr>'
+        $("#results").append('<tbody>'
                 + '<td>' + (i + 1) + '</td>'
                 + '<td>' + window.trialLogs[i].totalTime + ' sec</td>'
-                + '<td>~ ' + window.trialLogs[i].distanceTraveled + '</td>'
+                + '<td>' + window.trialLogs[i].distanceTraveled + 'px</td>'
                 + '<td>' + window.trialLogs[i].errors.length + '</td>'
                 + '<td>' + window.trialLogs[i].circleRadius + 'px</td>'
                 + '<td>' + window.trialLogs[i].circleDistance + 'px</td>'
                 + '<td>' + window.trialLogs[i].circlePosition + '</td>'
-                + '</tr>');
+                + '</tbody>');
     }
 
     console.log(window.trialLogs);

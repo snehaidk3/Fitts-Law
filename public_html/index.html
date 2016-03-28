@@ -25,6 +25,8 @@ difficulty(ID) while using a Mouse or a Trackpad.
 
         <script src="script/jquery.js"></script>
         <script src="script/bootstrap.min.js"></script>
+        <script src="script/tableExport.js"></script>
+        <script src="script/jquery.base64.js"></script>
         <script src="script/engine.js"></script>
 
     </head>
@@ -90,6 +92,7 @@ difficulty(ID) while using a Mouse or a Trackpad.
                         <table id="results" class="table table-striped table-hover table-bordered"></table>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onClick ="$('#results').tableExport({type:'excel',escape:'false', tableName:'Results'});">Download Results</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
