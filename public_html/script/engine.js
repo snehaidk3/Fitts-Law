@@ -20,9 +20,19 @@ possible_circle_distance = [128, 512];
 // STOP - Do not edit below this line unless you know what you are doing.
 // -------------------------------------------------------------------------
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $("#startUpModal").modal("show");
+
+    $('#agreement').on('click', function () {
+        if ($(this).prop("checked")) {
+            $('#continueBtn').show();
+        } else {
+            $('#continueBtn').hide();
+        }
+    });
+
+
 
     fittsLaw = new FittsLaw();
 
@@ -42,11 +52,11 @@ $(document).ready(function() {
  * Fitts Law Starter Class
  *
  */
-var FittsLaw = function() {
+var FittsLaw = function () {
 
     this.numberOfTrials;
 
-    this.start = function() {
+    this.start = function () {
         projectContainer = new ProjectContainer();
         projectContainer.draw();
 
@@ -60,7 +70,7 @@ var FittsLaw = function() {
  * Logger Class
  *
  */
-var Logger = function() {
+var Logger = function () {
 
     var self = this;
 
@@ -75,7 +85,7 @@ var Logger = function() {
     this.circleDistance;
     this.circlePosition;
 
-    this.calculateTotalTime = function() {
+    this.calculateTotalTime = function () {
         self.totalTime = (self.endTime - self.startTime) / 1000;
     };
 
@@ -86,7 +96,7 @@ var Logger = function() {
  *
  * This is our blueprint for creating a circle.
  */
-var Circle = function(resetButton) {
+var Circle = function (resetButton) {
 
     // store a pointer to 'this'
     var self = this;
@@ -112,7 +122,7 @@ var Circle = function(resetButton) {
                 height: (actualRadius * 2) + "px"
             })
             .addClass("circle")
-            .on("click", function(event) {
+            .on("click", function (event) {
 
                 resetButton.prop("disabled", false);
                 self.circle.remove();
@@ -133,7 +143,7 @@ var Circle = function(resetButton) {
 
             });
 
-    this.get = function() {
+    this.get = function () {
         return this.circle;
     };
 
@@ -156,7 +166,7 @@ var Circle = function(resetButton) {
  *
  *
  */
-var ProjectContainer = function() {
+var ProjectContainer = function () {
 
     // store a pointer to 'this'
     var self = this;
@@ -170,7 +180,7 @@ var ProjectContainer = function() {
                 width: self.width + "px"
             })
             .addClass("project-container")
-            .on("mousemove", function(event) {
+            .on("mousemove", function (event) {
                 try {
                     if (window.logger.active) {
                         window.logger.distanceTraveled++;
@@ -179,7 +189,7 @@ var ProjectContainer = function() {
 
                 }
             })
-            .on("click", function(event) {
+            .on("click", function (event) {
                 try {
                     if (window.logger.active) {
                         var error = {
@@ -194,15 +204,15 @@ var ProjectContainer = function() {
 
             });
 
-    this.draw = function() {
+    this.draw = function () {
         $(document.body).append(this.projectContainer);
     };
 
-    this.add = function(circle) {
+    this.add = function (circle) {
         this.projectContainer.append(circle);
     };
 
-    this.get = function() {
+    this.get = function () {
         return this.projectContainer;
     };
 
@@ -213,14 +223,14 @@ var ProjectContainer = function() {
  * 
  * @param {type} projectContainer
  */
-var ResetButton = function(projectContainer) {
+var ResetButton = function (projectContainer) {
 
     // store a pointer to 'this'
     var self = this;
 
     this.resetButton = $("<button type='button'>Go</button>")
             .addClass("reset-button btn btn-success")
-            .on("click", function() {
+            .on("click", function () {
 
                 window.logger = new Logger();
                 window.logger.active = true;
@@ -232,7 +242,7 @@ var ResetButton = function(projectContainer) {
 
             });
 
-    this.draw = function() {
+    this.draw = function () {
         $(document.body).append(this.resetButton);
     };
 
@@ -242,6 +252,8 @@ function displayResults(resetButton) {
 
     resetButton.prop("disabled", true);
     $("#alertMessage").show();
+
+    $("#participantName").html($("#name").val());
 
     $("#resultsModal").modal("show");
 

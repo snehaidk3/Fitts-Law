@@ -44,7 +44,7 @@ difficulty(ID) while using a Mouse or a Trackpad.
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        
                         <h4 class="modal-title">Fitts' Law Experiment</h4>
                     </div>
                     <div class="modal-body">                        
@@ -57,10 +57,20 @@ difficulty(ID) while using a Mouse or a Trackpad.
                             Repeat this process until the experiment is over.
                             <br/><br/>
                             <i>Thank you for your participation.</i>
+                            <br/><br/>
+                            <label class="checkbox-inline">
+                                <input id="agreement" type="checkbox" value=""><b>I have read the above directions and understand my involvement in this trial.</b>
+                            </label>                            
                         </p>
+
+                        <div class="form-group">
+                            <label for="name">Your First Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="First Name">
+                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Got It!</button>                        
+                        <button id="continueBtn" type="button" class="btn btn-primary" data-dismiss="modal">Let's Go!</button>                        
                     </div>
                 </div>
             </div>
@@ -73,7 +83,7 @@ difficulty(ID) while using a Mouse or a Trackpad.
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Results</h4>
+                        <h4 class="modal-title">Results for <span id="participantName"></span></h4>
                     </div>
                     <div class="modal-body">
                         <p>Nice Job! Here are your results:</p>

@@ -19,3 +19,7 @@ body {
     width: 35px;
     padding: 0px;
 }
+
+#continueBtn {
+    display: none;
+}
